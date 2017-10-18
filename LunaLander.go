@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	screenwidth = 800
-	screenheight = 480
+	screenwidth = 600
+	screenheight = 400
 	datafolder = "lunarLanderData"
 	sampleRate   = 44100
 	clockwise = 200
@@ -63,6 +63,8 @@ type landerData struct {
 	docked bool
 	shipname string
 	dummy int
+	retrox float64
+	retroy float64
 }
 
 type landingZone struct {
@@ -92,6 +94,17 @@ var (
 	engineloop *audio.Player
 	audioContext    *audio.Context
 	shipFocus int 
+
+	keyStates    = map[ebiten.Key]int{
+		ebiten.KeyUp:    0,
+		ebiten.KeyDown:  0,
+		ebiten.KeyLeft:  0,
+		ebiten.KeyRight: 0,
+		ebiten.KeyA:     0,
+		ebiten.KeyS:     0,
+		ebiten.KeyW:     0,
+		ebiten.KeyD:     0,
+	}
 )
 
 func loopsoundinit() {
@@ -268,6 +281,8 @@ func (l *landerData) init(shipFILEname string,
 	l.key = "none"
 	l.fuel = 500000
 	l.docked = true 
+	l.retrox = 0
+	l.retroy = 0
 
 }
 
@@ -329,6 +344,9 @@ func (l *landerData) physics(screen *ebiten.Image) {
 	const (
 		gravityVal = 0.1
 	)
+
+	l.x += float64(l.retrox)
+	l.y += float64(l.retroy)
 
 	if l.horSpeed > 0 && l.flyingDir == 90 {
 		l.x += 1
@@ -429,31 +447,43 @@ func (l *landerData) physics(screen *ebiten.Image) {
 }
 
 func (l *landerData) control() {
+	for key := range keyStates {
+		if !ebiten.IsKeyPressed(key) {
+			keyStates[key] = 0
+			continue
+		}
+		keyStates[key]++
+	}
 
 
 	if ebiten.IsKeyPressed(ebiten.KeySlash) && l.key != "KeySlash" {
 		l.key = "KeySlash"
 	} 	
 
-	if ebiten.IsKeyPressed(ebiten.KeyA) {
+	if keyStates[ebiten.KeyA] == 1 { //ebiten.IsKeyPressed(ebiten.KeyA) {
 		sound.play(soundboom)
-		l.x -= 1
+		l.retrox -= 0.1
+		//l.x -= 1
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyW) {
+	if keyStates[ebiten.KeyW] == 1 { //ebiten.IsKeyPressed(ebiten.KeyW) {
 		sound.play(soundboom)
-		l.y -= 1
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyS) {
-		sound.play(soundboom)
-		l.y += 1
+		l.retroy -= 0.1
+		//l.y -= 1
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeyD) {
+	if keyStates[ebiten.KeyS] == 1 { // ebiten.IsKeyPressed(ebiten.KeyS) {
 		sound.play(soundboom)
-		l.x += 1
+		l.retroy += 0.1
+		//l.y += 1
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
+	if keyStates[ebiten.KeyD] == 1 { // ebiten.IsKeyPressed(ebiten.KeyD) {
+		sound.play(soundboom)
+		l.retrox += 0.1
+		//l.x += 1
+	}
+
+	if keyStates[ebiten.KeyLeft] == 1 { //ebiten.IsKeyPressed(ebiten.KeyLeft) {
 		if l.keyleft  {
 			//l.key = "keyleft"
 			l.keyleft = false
@@ -466,7 +496,7 @@ func (l *landerData) control() {
 		//l.key = "none"
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeyRight)  {
+	if keyStates[ebiten.KeyRight] == 1 { // ebiten.IsKeyPressed(ebiten.KeyRight)  {
 		if l.keyright {
 			l.rotateSpeed -= 1
 			//l.key = "keyright"		
@@ -482,7 +512,7 @@ func (l *landerData) control() {
 		engineloop.Pause()
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeyUp) {  // reduce thrust
+	if keyStates[ebiten.KeyUp] == 1 {  // reduce thrust
 		l.thrust -= 0.1
 		if l.thrust < 0 {
 			l.thrust = 0
@@ -491,7 +521,7 @@ func (l *landerData) control() {
 		}
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeyDown) {  // increase thrust
+	if keyStates[ebiten.KeyDown] == 1 {  // increase thrust
 		l.thrust += 0.1
 		if l.thrust > 5 {
 			l.thrust = 5
@@ -553,27 +583,31 @@ func update(screen *ebiten.Image) error {
 		ship.docked = false
 		commMod.docked = false
 		if ship.x < commMod.x {
-			ship.x -= 1
+			ship.x -= 3
 		} else {
-			ship.x += 1
+			ship.x += 3
 		}
 
 	}
 
 	if ship.x < commMod.x {
 
-		if commMod.x - ship.x == 71 && commMod.y - ship.y == 0 {
+		if (int(commMod.x) - int(ship.x) == 71) && (int(commMod.y) == int(ship.y)) {
 			ship.docked = true
 			commMod.docked = true
 			ship.pointedDir = 90
 			commMod.pointedDir = 270
+			ship.retrox = 0
+			ship.retroy = 0
 		}
 	} else {
-		if commMod.x - ship.x == -71 && commMod.y - ship.y == 0 {
+		if (int(commMod.x) - int(ship.x) == -71) && (int(commMod.y) == int(ship.y)) {
 			ship.docked = true
 			commMod.docked = true
 			ship.pointedDir = 270
 			commMod.pointedDir = 90
+			ship.retrox = 0
+			ship.retroy = 0
 		}
 	}
 

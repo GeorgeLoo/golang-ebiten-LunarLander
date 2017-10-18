@@ -24,10 +24,13 @@ detect crashes
 detect improper undocking boomz
 detect too fast a descent
 
-use keystates instead 
+retro also uses fuel
 
 -------------------------------
 
+
+
+use keystates instead 
 
 	 Tuesday 17/10/2017 h
 
