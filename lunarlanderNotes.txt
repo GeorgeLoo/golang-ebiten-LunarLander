@@ -1,0 +1,75 @@
+
+
+/*
+
+Luna Lander
+
+George Loo  24.8.2017
+Software toys concept 
+*************************************************
+
+1 2 arrows wasd U 
+
+
+have random stars
+Two or more screen lunar surface!
+
+deorbit burn while docked
+show deorbit by not drawing surface
+
+fuel consumption
+
+command module cannot land on the Moon
+detect crashes
+detect improper undocking boomz
+detect too fast a descent
+
+use keystates instead 
+
+-------------------------------
+
+
+	 Tuesday 17/10/2017 h
+
+Removed the running slowly and it was still slow.
+
+bug - some sideways landing positions the rocket has no effect
+command module pushes lunar module while docked
+
+	 Sunday 15/10/2017 h
+docking to command module
+undocking from command module
+
+	Saturday 14/10/2017 h
+
+command module
+Tab or 1,2 to switch ships!
+Enlarged Command Module by 200%
+reuse LEM code!
+draw command module
+
+--
+
+bug acceleration during descent burn!
+bug fuel burned too quickly
+
+sound
+retro thruster animation?!
+four direction translation controls!
+thrust direction
+travel direction
+fuel
+thrust
+height
+descent speed
+horizontal speed
+full screen
+landing zone
+nice surface graphics
+WASD for up down left right translation
+bug ship fails to rotate if not in focus
+
+--------------------------------
+
+
+*/
