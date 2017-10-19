@@ -26,10 +26,12 @@ detect too fast a descent
 
 retro also uses fuel
 
+
 -------------------------------
 
 
 
+better docking code 
 use keystates instead 
 
 	 Tuesday 17/10/2017 h

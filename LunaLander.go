@@ -583,31 +583,45 @@ func update(screen *ebiten.Image) error {
 		ship.docked = false
 		commMod.docked = false
 		if ship.x < commMod.x {
+			ship.retrox -= 0.1
 			ship.x -= 3
 		} else {
+			ship.retrox += 0.1
 			ship.x += 3
 		}
 
 	}
 
 	if ship.x < commMod.x {
-
-		if (int(commMod.x) - int(ship.x) == 71) && (int(commMod.y) == int(ship.y)) {
+		diffx := int(commMod.x) - int(ship.x) 
+		diffy := int(commMod.y) - int(ship.y)
+		if approx(diffx,69,72) && approx(diffy,-2,2) {
+		//if (int(commMod.x) - int(ship.x) == 71) && (int(commMod.y) == int(ship.y)) {
 			ship.docked = true
 			commMod.docked = true
 			ship.pointedDir = 90
 			commMod.pointedDir = 270
-			ship.retrox = 0
-			ship.retroy = 0
+			ship.retrox = 0.0
+			ship.retroy = 0.0
+			commMod.retrox = 0.0
+			commMod.retroy = 0.0
+
 		}
 	} else {
-		if (int(commMod.x) - int(ship.x) == -71) && (int(commMod.y) == int(ship.y)) {
+		diffx := int(commMod.x) - int(ship.x) 
+		diffy := int(commMod.y) - int(ship.y)
+		fmt.Print(diffx,diffy," retrun diffx diffy \n")
+		if approx(diffx,-72,-69) && approx(diffy,-2,2) {
+		//if (int(commMod.x) - int(ship.x) == -71) && (int(commMod.y) == int(ship.y)) {
 			ship.docked = true
 			commMod.docked = true
 			ship.pointedDir = 270
 			commMod.pointedDir = 90
-			ship.retrox = 0
-			ship.retroy = 0
+			ship.retrox = 0.0
+			ship.retroy = 0.0
+			commMod.retrox = 0.0
+			commMod.retroy = 0.0
+
 		}
 	}
 
