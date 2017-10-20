@@ -296,7 +296,8 @@ func (l *landerData) draw(screen *ebiten.Image) {
 	opts.GeoM.Reset()
 	opts.GeoM.Translate(-float64(w)/2, -float64(h)/2)
 	opts.GeoM.Rotate(float64(l.pointedDir % 360) * 2 * math.Pi / 360)
-	opts.GeoM.Scale( 1.0, 1.0 )
+	//opts.GeoM.Scale( 1.0, 1.0 )
+	opts.GeoM.Scale( 0.5, 0.5 )
 	opts.GeoM.Translate(l.x, l.y)
 
 	screen.DrawImage(l.image, opts)
@@ -584,10 +585,10 @@ func update(screen *ebiten.Image) error {
 		commMod.docked = false
 		if ship.x < commMod.x {
 			ship.retrox -= 0.1
-			ship.x -= 3
+			ship.x -= 2
 		} else {
 			ship.retrox += 0.1
-			ship.x += 3
+			ship.x += 2
 		}
 
 	}
@@ -595,8 +596,8 @@ func update(screen *ebiten.Image) error {
 	if ship.x < commMod.x {
 		diffx := int(commMod.x) - int(ship.x) 
 		diffy := int(commMod.y) - int(ship.y)
-		if approx(diffx,69,72) && approx(diffy,-2,2) {
-		//if (int(commMod.x) - int(ship.x) == 71) && (int(commMod.y) == int(ship.y)) {
+		fmt.Print(diffx,diffy," LEM on the left \n")
+		if approx(diffx,35,37) && approx(diffy,-2,2) {
 			ship.docked = true
 			commMod.docked = true
 			ship.pointedDir = 90
@@ -611,8 +612,7 @@ func update(screen *ebiten.Image) error {
 		diffx := int(commMod.x) - int(ship.x) 
 		diffy := int(commMod.y) - int(ship.y)
 		fmt.Print(diffx,diffy," retrun diffx diffy \n")
-		if approx(diffx,-72,-69) && approx(diffy,-2,2) {
-		//if (int(commMod.x) - int(ship.x) == -71) && (int(commMod.y) == int(ship.y)) {
+		if approx(diffx,-37,-35) && approx(diffy,-2,2) {
 			ship.docked = true
 			commMod.docked = true
 			ship.pointedDir = 270
@@ -675,7 +675,7 @@ func main() {
 				"flame.png",
 				90, // pointed direction
 				"LUNAR MODULE",
-				10,
+				44,
 				40)
 
 	ship.dummy = 1234
@@ -690,7 +690,7 @@ func main() {
 	shipFocus = kLunarModule
 
 	
-	scale := 2.0
+	scale := 1.0
 	// Initialize Ebiten, and loop the update() function
 	if err := ebiten.Run(update, screenwidth, screenheight, scale, "Luna Lander 0.0 by George Loo"); err != nil {
 		panic(err)
