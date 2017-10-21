@@ -444,6 +444,9 @@ func (l *landerData) physics(screen *ebiten.Image) {
 
 		l.horSpeed = 0
 		l.vertSpeed = 0 
+		l.retrox = 0.0
+		l.retroy = 0.0
+			
 	}
 }
 
@@ -652,6 +655,10 @@ func update(screen *ebiten.Image) error {
 			ship.x += float64(commMod.thrust)
 			ship.horSpeed += 1
 		}
+
+		ship.x += float64(commMod.retrox)  // ??? cannot work if docked.
+		ship.y += float64(commMod.retroy)
+
 	}
 
 	return nil 

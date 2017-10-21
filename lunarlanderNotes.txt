@@ -25,12 +25,13 @@ detect improper undocking boomz
 detect too fast a descent
 
 retro also uses fuel
+affects speed as well
 
 
 -------------------------------
 
 
-
+better landing with retros off --- 22.10.2017 0202h
 better docking code 
 use keystates instead 
 
