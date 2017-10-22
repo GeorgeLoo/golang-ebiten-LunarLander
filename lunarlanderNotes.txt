@@ -19,19 +19,25 @@ show deorbit by not drawing surface
 
 fuel consumption
 
+explosions
+
 command module cannot land on the Moon
 detect crashes
 detect improper undocking boomz
 detect too fast a descent
 
-retro also uses fuel
-affects speed as well
 
 
 -------------------------------
 
 
-better landing with retros off --- 22.10.2017 0202h
+	22.10.2017 2221h
+retro also uses fuel
+affects speed as well
+
+--- 22.10.2017 0202h
+
+better landing with retros off 
 better docking code 
 use keystates instead 
 

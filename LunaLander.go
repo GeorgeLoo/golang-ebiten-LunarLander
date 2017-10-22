@@ -7,7 +7,19 @@ George Loo
 Luna Lander 26.8.2017
 
 */
-
+// Copyright 2017 George Loo
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 
 //jj
@@ -28,7 +40,7 @@ import (
 )
 
 const (
-	screenwidth = 600
+	screenwidth = 800
 	screenheight = 400
 	datafolder = "lunarLanderData"
 	sampleRate   = 44100
@@ -48,7 +60,8 @@ type landerData struct {
 	height int 
 	fuel int
 	thrust float64 
-	x, y float64 
+	x, y float64   
+	cx, cy int // centre x y 
 	w, h int
 	image *ebiten.Image
 	flameimg *ebiten.Image
@@ -267,6 +280,7 @@ func (l *landerData) init(shipFILEname string,
 	l.flameimg = readimg(flamename)
 	l.shipname = shipname
 
+	l.cx, l.cy = l.image.Size()
 	l.pointedDir = pointedDir // "north" is 0
 	l.x = x 
 	l.y = y
@@ -308,6 +322,37 @@ func (l *landerData) draw(screen *ebiten.Image) {
 	// msg := fmt.Sprintf("Fuel %d HSpeed %d VSpeed %d\n dir %d",
 	// 	l.fuel, l.horSpeed, l.vertSpeed, l.pointedDir )
 	// ebitenutil.DebugPrint(screen, msg)
+
+}
+
+type Point struct {
+	X float64
+	Y float64
+}
+
+
+// from https://play.golang.org/p/5KL4HipSJ-
+// Distance finds the length of the hypotenuse between two points.
+// Forumula is the square root of (x2 - x1)^2 + (y2 - y1)^2
+func (p Point) Distance(p2 Point) float64 {
+	first := math.Pow(float64(p2.X-p.X), 2)
+	second := math.Pow(float64(p2.Y-p.Y), 2)
+	return math.Sqrt(first + second)
+}
+
+
+func Collision() bool {  // x,y,x1,y1 float64
+	var a,b Point
+
+	a.X = 10
+	a.Y = 5
+
+	b.X = 20
+	b.Y = 5
+
+	dist := a.Distance(b)
+	fmt.Println("Distance", dist)
+	return false
 
 }
 
@@ -467,24 +512,26 @@ func (l *landerData) control() {
 	if keyStates[ebiten.KeyA] == 1 { //ebiten.IsKeyPressed(ebiten.KeyA) {
 		sound.play(soundboom)
 		l.retrox -= 0.1
-		//l.x -= 1
+		l.fuel -= 10
+		l.horSpeed -= 5
 	}
 	if keyStates[ebiten.KeyW] == 1 { //ebiten.IsKeyPressed(ebiten.KeyW) {
 		sound.play(soundboom)
 		l.retroy -= 0.1
-		//l.y -= 1
+		l.fuel -= 10
 	}
 
 	if keyStates[ebiten.KeyS] == 1 { // ebiten.IsKeyPressed(ebiten.KeyS) {
 		sound.play(soundboom)
 		l.retroy += 0.1
-		//l.y += 1
+		l.fuel -= 10
 	}
 
 	if keyStates[ebiten.KeyD] == 1 { // ebiten.IsKeyPressed(ebiten.KeyD) {
 		sound.play(soundboom)
 		l.retrox += 0.1
-		//l.x += 1
+		l.fuel -= 10
+		l.horSpeed += 5
 	}
 
 	if keyStates[ebiten.KeyLeft] == 1 { //ebiten.IsKeyPressed(ebiten.KeyLeft) {
@@ -599,7 +646,7 @@ func update(screen *ebiten.Image) error {
 	if ship.x < commMod.x {
 		diffx := int(commMod.x) - int(ship.x) 
 		diffy := int(commMod.y) - int(ship.y)
-		fmt.Print(diffx,diffy," LEM on the left \n")
+		//fmt.Print(diffx,diffy," LEM on the left \n")
 		if approx(diffx,35,37) && approx(diffy,-2,2) {
 			ship.docked = true
 			commMod.docked = true
@@ -614,7 +661,7 @@ func update(screen *ebiten.Image) error {
 	} else {
 		diffx := int(commMod.x) - int(ship.x) 
 		diffy := int(commMod.y) - int(ship.y)
-		fmt.Print(diffx,diffy," retrun diffx diffy \n")
+		//fmt.Print(diffx,diffy," retrun diffx diffy \n")
 		if approx(diffx,-37,-35) && approx(diffy,-2,2) {
 			ship.docked = true
 			commMod.docked = true
@@ -696,7 +743,7 @@ func main() {
 	
 	shipFocus = kLunarModule
 
-	
+	Collision()
 	scale := 1.0
 	// Initialize Ebiten, and loop the update() function
 	if err := ebiten.Run(update, screenwidth, screenheight, scale, "Luna Lander 0.0 by George Loo"); err != nil {
