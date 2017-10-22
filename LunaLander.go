@@ -281,6 +281,8 @@ func (l *landerData) init(shipFILEname string,
 	l.shipname = shipname
 
 	l.cx, l.cy = l.image.Size()
+	l.cx /= 2
+	l.cy /= 2 
 	l.pointedDir = pointedDir // "north" is 0
 	l.x = x 
 	l.y = y
@@ -341,14 +343,14 @@ func (p Point) Distance(p2 Point) float64 {
 }
 
 
-func Collision() bool {  // x,y,x1,y1 float64
+func Collision(x,y,x1,y1 float64) bool {  // 
 	var a,b Point
 
-	a.X = 10
-	a.Y = 5
+	a.X = x
+	a.Y = y
 
-	b.X = 20
-	b.Y = 5
+	b.X = x1
+	b.Y = y1
 
 	dist := a.Distance(b)
 	fmt.Println("Distance", dist)
@@ -390,6 +392,8 @@ func (l *landerData) physics(screen *ebiten.Image) {
 	const (
 		gravityVal = 0.1
 	)
+
+
 
 	l.x += float64(l.retrox)
 	l.y += float64(l.retroy)
@@ -621,6 +625,13 @@ func update(screen *ebiten.Image) error {
 		//fmt.Print("running slowly! \n")
 	}
 
+	cmcx := commMod.x + float64(commMod.cx)
+	cmcy := commMod.y + float64(commMod.cy)
+	lemcx := ship.x + float64(ship.cx)
+	lemcy := ship.y + float64(ship.cy)
+	Collision(cmcx,cmcy,lemcx,lemcy)
+
+
 	if ebiten.IsKeyPressed(ebiten.Key1) {
 		shipFocus = kCommandModule
 		
@@ -743,7 +754,7 @@ func main() {
 	
 	shipFocus = kLunarModule
 
-	Collision()
+	
 	scale := 1.0
 	// Initialize Ebiten, and loop the update() function
 	if err := ebiten.Run(update, screenwidth, screenheight, scale, "Luna Lander 0.0 by George Loo"); err != nil {
