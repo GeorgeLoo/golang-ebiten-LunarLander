@@ -1,0 +1,24 @@
+
+
+mouse down var set to 0
+
+
+update loop
+
+if mouse down var is 1 then
+    if not mouse is down
+        mouse up callback
+        mouse down var set to 0
+
+if mouse down and mouse down var is 0
+    set mouse down var to 1
+    mouse down callback
+
+update loop end
+
+-----------------------------------------
+mouse down callback
+
+mouse up callback
+
+
