@@ -118,6 +118,9 @@ var (
 		ebiten.KeyW:     0,
 		ebiten.KeyD:     0,
 	}
+
+	mousedownState bool 
+	keyQstate bool
 )
 
 func loopsoundinit() {
@@ -352,8 +355,8 @@ func Collision(x,y,x1,y1 float64) bool {  //
 	b.X = x1
 	b.Y = y1
 
-	dist := a.Distance(b)
-	fmt.Println("Distance", dist)
+	//dist := a.Distance(b)
+	//fmt.Println("Distance", dist)
 	return false
 
 }
@@ -617,6 +620,22 @@ func togglFullscreen() {
 	}
 }
 
+func mouseLeftdown() {
+	fmt.Print("mousedown \n")
+}
+
+func mouseLeftup() {
+	fmt.Print("mouseup \n")
+}
+
+func keyQdown() {
+	fmt.Print("key Q down\n")	
+}
+
+func keyQup() {
+	fmt.Print("key Q up\n")	
+}
+
 
 func update(screen *ebiten.Image) error {
 
@@ -625,11 +644,40 @@ func update(screen *ebiten.Image) error {
 		//fmt.Print("running slowly! \n")
 	}
 
+	if mousedownState {
+		if !ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+			mousedownState = false
+			mouseLeftup()
+		}
+	}
+
+	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+		if !mousedownState {
+			mousedownState = true
+			mouseLeftdown()
+		}
+	}
+
 	cmcx := commMod.x + float64(commMod.cx)
 	cmcy := commMod.y + float64(commMod.cy)
 	lemcx := ship.x + float64(ship.cx)
 	lemcy := ship.y + float64(ship.cy)
 	Collision(cmcx,cmcy,lemcx,lemcy)
+
+	if keyQstate {
+		if !ebiten.IsKeyPressed(ebiten.KeyQ) {
+			keyQstate = false
+			keyQup()
+		}
+	}
+
+	if ebiten.IsKeyPressed(ebiten.KeyQ) {
+		if !keyQstate {
+			keyQstate = true
+			keyQdown()
+		}
+		
+	}
 
 
 	if ebiten.IsKeyPressed(ebiten.Key1) {
@@ -733,6 +781,10 @@ func main() {
 	engineloop = loadloop("explosion.wav")
 	ebiten.SetRunnableInBackground(true)
 	ebiten.SetFullscreen(false)
+	
+	mousedownState = false
+	keyQstate = false 
+	
 	count = 0
 	surface.init(screenwidth, screenheight)
 	
