@@ -26,7 +26,7 @@ detect crashes
 detect improper undocking boomz
 detect too fast a descent
 
-
+filepath for the data should be platform independent
 
 -------------------------------
 
