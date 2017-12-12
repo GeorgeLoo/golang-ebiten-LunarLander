@@ -292,7 +292,7 @@ func (l *landerData) init(shipFILEname string,
 	l.rocketEngine = false
 	l.rotateSpeed = 0
 	l.shiprotdir = notRotating
-	l.horSpeed = kMoonOrbitalSpeed
+	l.horSpeed = kMoonOrbitalSpeed + 200
 	l.vertSpeed = 0
 	l.height = 200
 	l.thrust = 0
@@ -633,7 +633,7 @@ func keyQdown() {
 }
 
 func keyQup() {
-	fmt.Print("key Q up\n")	
+	fmt.Print("key Q up\n", ebiten.KeyQ)	
 }
 
 
@@ -784,7 +784,7 @@ func main() {
 	
 	mousedownState = false
 	keyQstate = false 
-	
+
 	count = 0
 	surface.init(screenwidth, screenheight)
 	
