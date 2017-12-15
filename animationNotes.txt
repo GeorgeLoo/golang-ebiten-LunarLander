@@ -14,12 +14,9 @@ number of frames
 width and height of one frame
 looping or not
 speed of frames
+based on the 60 frames a second of Ebiten
+
 location on screen
 scale of animation
 start at which frame
 do for a number of times?
-
-
-
-
-
