@@ -355,8 +355,12 @@ func Collision(x,y,x1,y1 float64) bool {  //
 	b.X = x1
 	b.Y = y1
 
-	//dist := a.Distance(b)
+	dist := a.Distance(b)
 	//fmt.Println("Distance", dist)
+
+	if dist < 10.0 {
+		fmt.Println("CRASH")
+	}
 	return false
 
 }
