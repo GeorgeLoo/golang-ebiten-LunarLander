@@ -78,6 +78,8 @@ type landerData struct {
 	dummy int
 	retrox float64
 	retroy float64
+	damaged bool
+
 }
 
 type landingZone struct {
@@ -302,6 +304,7 @@ func (l *landerData) init(shipFILEname string,
 	l.docked = true 
 	l.retrox = 0
 	l.retroy = 0
+	l.damaged = false
 
 }
 
@@ -356,10 +359,14 @@ func Collision(x,y,x1,y1 float64) bool {  //
 	b.Y = y1
 
 	dist := a.Distance(b)
-	//fmt.Println("Distance", dist)
+	if dist < 50.0 {
+		fmt.Println("Distance", dist)
+	}
+	
 
 	if dist < 10.0 {
-		fmt.Println("CRASH")
+		//fmt.Println("CRASH")
+		return true
 	}
 	return false
 
@@ -666,7 +673,10 @@ func update(screen *ebiten.Image) error {
 	cmcy := commMod.y + float64(commMod.cy)
 	lemcx := ship.x + float64(ship.cx)
 	lemcy := ship.y + float64(ship.cy)
-	Collision(cmcx,cmcy,lemcx,lemcy)
+	if Collision(cmcx,cmcy,lemcx,lemcy) {
+		ship.damaged = true
+		commMod.damaged = true
+	}
 
 	if keyQstate {
 		if !ebiten.IsKeyPressed(ebiten.KeyQ) {
@@ -745,8 +755,14 @@ func update(screen *ebiten.Image) error {
 	surface.draw(screen)
 
 	count++
-	ship.draw(screen)
-	commMod.draw(screen)
+	if !ship.damaged {
+		ship.draw(screen)
+	}
+	
+	if !commMod.damaged {
+		commMod.draw(screen)
+	}
+	
 
 	if shipFocus == kLunarModule {
 		ship.control()
