@@ -669,10 +669,10 @@ func update(screen *ebiten.Image) error {
 		}
 	}
 
-	cmcx := commMod.x + float64(commMod.cx)
-	cmcy := commMod.y + float64(commMod.cy)
-	lemcx := ship.x + float64(ship.cx)
-	lemcy := ship.y + float64(ship.cy)
+	cmcx := commMod.x + float64(commMod.cx) / 2.0  // find the centre
+	cmcy := commMod.y + float64(commMod.cy) / 2.0
+	lemcx := ship.x + float64(ship.cx) / 2.0
+	lemcy := ship.y + float64(ship.cy) / 2.0
 	if Collision(cmcx,cmcy,lemcx,lemcy) {
 		ship.damaged = true
 		commMod.damaged = true
