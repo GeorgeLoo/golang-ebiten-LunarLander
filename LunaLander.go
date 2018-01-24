@@ -37,6 +37,8 @@ import (
 	"os"
 	"math"
 	"path/filepath"
+	
+	
 )
 
 const (
@@ -123,6 +125,8 @@ var (
 
 	mousedownState bool 
 	keyQstate bool
+	explosionAnim AnimationType
+
 )
 
 func loopsoundinit() {
@@ -676,6 +680,13 @@ func update(screen *ebiten.Image) error {
 	if Collision(cmcx,cmcy,lemcx,lemcy) {
 		ship.damaged = true
 		commMod.damaged = true
+		
+	}
+
+
+	if ship.damaged {
+		explosionAnim.animate(screen, lemcx-float64(ship.cx*2), lemcy-float64(ship.cy*2) )
+		
 	}
 
 	if keyQstate {
@@ -825,6 +836,12 @@ func main() {
 				40)  //y
 	
 	shipFocus = kLunarModule
+
+	explosionAnim.init("explosion00.png", 100,100, 15)
+	explosionAnim.looping = false
+	explosionAnim.speed = 15
+	explosionAnim.run = true
+	explosionAnim.currF = 0
 
 	
 	scale := 1.0
